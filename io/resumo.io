@@ -63,4 +63,9 @@ ferrari slotNames println
 method("print algo" println)
 // cria um método que faz o print de print algo.
 
+// Método recursivo
+rec := method(n, if (n == 0, "é zero" println 
+			     return rec(2), 
+                             return -1))
+rec(0) println
 
