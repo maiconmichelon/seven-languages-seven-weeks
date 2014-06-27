@@ -34,12 +34,34 @@ List sum := method(
 	// faz um foreach na lista
 	self flatten() foreach(index, value, 
 		// Se o valor for um número ele adiciona caso não, é uma lista, então faz uma chamada recursiva com a lista
-		if ( value type == "Number", tot := tot + value, tot := tot + value.sum ))
+		if ( value type == "Number", tot := tot + value, tot := tot + (value sum)))
 	return tot
 );
 
-list(
+lst := list(
+    1, 7,
     list( 1, 2, 3 ),
     list( 10, 30 ),
     list( 100, 200 )
-) sum println;
+);
+"Soma " print
+lst sum println
+
+// Add a slot called myAverage to a list that computes the average of
+// all the numbers in a list. What happens if there are no numbers
+// in a list? (Bonus: Raise an Io exception if any item in the list is not
+// a number.)
+List setSlot("myAverage",
+	method(
+		tot := 0
+		count := 0
+		self flatten foreach(index, value,
+			if ( value type == "Number", 
+				tot := tot + value; count := count + 1, 
+				tot := tot + (value sum); count := count + value size)
+		)
+		return tot / count;
+	)
+)
+"Média " print
+lst myAverage println
