@@ -39,7 +39,8 @@ List sum := method(
 );
 
 lst := list(
-    1, 7,
+    1, 7, 
+    // "a",
     list( 1, 2, 3 ),
     list( 10, 30 ),
     list( 100, 200 )
@@ -51,17 +52,99 @@ lst sum println
 // all the numbers in a list. What happens if there are no numbers
 // in a list? (Bonus: Raise an Io exception if any item in the list is not
 // a number.)
-List setSlot("myAverage",
+List setSlot("media",
 	method(
 		tot := 0
 		count := 0
-		self flatten foreach(index, value,
+		self foreach(index, value,
 			if ( value type == "Number", 
 				tot := tot + value; count := count + 1, 
-				tot := tot + (value sum); count := count + value size)
+				if ( value type == "List", 
+					tot := tot + (value sum); count := count + value size, 
+					Exception raise("List must have only numbers.")))
 		)
 		return tot / count;
 	)
 )
 "Média " print
-lst myAverage println
+lst media println
+
+// Write a prototype for a two-dimensional list. The dim(x, y) method
+// should allocate a list of y lists that are x elements long. set(x, y,
+// value) should set a value, and get(x, y) should return that value.
+Matriz := Object clone
+Matriz create := method(x, y,
+	self lists := list; // Cria uma lista
+	for (i, 1, x, lists push(list() setSize(y))); // dentro de cada list cria outra lista 
+);
+Matriz set := method(x, y, value,
+	self lists at(x) atPut(y, value); 
+);
+Matriz get := method(x, y,
+	self lists at(x) at(y);
+);
+
+lst := Matriz clone;
+lst create(3, 2);
+lst println
+
+lst set(0, 0, 2);
+lst set(0, 1, "a");
+lst set(1, 0, "b");
+lst set(1, 1, "c");
+lst println
+
+lst get(0, 1) println // a
+
+// Bonus: Write a transpose method so that (new_matrix get(y, x)) ==
+// matrix get(x, y) on the original list.
+Matriz copiar := method(
+	copia := self clone; // Clona uma matriz
+	copia create(lists size, lists at(0) size); // Cria uma matriz com o mesmo tamanho 
+	for (i, 0, lists size - 1, // Itera sobre a lista principal
+		for (y, 0, lists at(0) size - 1, // Itera sobre a lista secundaria
+			copia set(i, y, self get(i, y)); // Seta os valores
+		)
+	)
+	return copia;
+)
+copia := lst copiar;
+
+// Write the matrix to a file, and read a matrix from a file
+Matriz write = method(fileName, 
+	file := File open(fileName);
+	for (i, 0, lists size -1, 
+		for (y, 0, lists at(0) size -1,
+			file write(self get(i, y) asString);
+			file write(" ");
+		);
+		file write("\n");
+	);
+	file close;
+);
+copia write("/home/maicon/matriz");
+"O arquivo /home/maicon/matriz foi criado";
+
+// Write a program that gives you ten tries to guess a random number
+// from 1–100. If you would like, give a hint of “hotter” or “colder”
+// after the first guess.
+random := Random value(100) ceil
+ultimo := -1;
+atual := -1;
+
+random println
+
+input := File standardInput()
+while (true,
+	atual := input readLine asNumber;
+	if (atual == random, "Muito bem vocë acerto !!" println; break;)
+	if (atual == (1 negate), 
+		"Tente novamente",
+		difU := (random - ultimo) abs;
+		difA := (random - atual) abs;
+		if (difU < difA, "Esfriou!" println, "Esquentou!" println);
+	);
+	ultimo := atual;
+)
+
+
