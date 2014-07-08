@@ -67,3 +67,93 @@ var (x, y) = (2, 3) // estou setando as variaveis 'X' e 'Y'
 println(x + " - " + y) // 2 - 3
 
 // Classes
+class Person(firstName: String, lastName: String)
+val maicon = new Person("Maicon", "Michelon")
+
+class Compasso {
+
+  val direcoes = List("norte", "leste", "sul", "oeste")
+  var rolamento = 0
+
+  print("Rolamento inicial : ")
+  println(direcao)
+
+  def direcao() = direcoes(rolamento)
+
+  def inform(turnDirection: String) {
+    println("Virando para a " + turnDirection + ". Agora estamos na direção " + direcao)
+  }
+
+  def virarDireita() {
+    rolamento = (rolamento + (direcoes.size + 1)) % direcoes.size
+    inform("Direita")
+  }
+
+  def virarEsquerda() {
+    rolamento = (rolamento + (direcoes.size - 1)) % direcoes.size
+    inform("Esquerda")
+  }
+
+}
+
+val meuCompasso = new Compasso
+meuCompasso.virarDireita
+meuCompasso.virarDireita
+
+meuCompasso.virarEsquerda
+meuCompasso.virarEsquerda
+meuCompasso.virarEsquerda
+meuCompasso.virarEsquerda
+meuCompasso.virarEsquerda
+
+def teste = "abc" // É um syntax sugar, quando é uma única linha.
+println(teste) // Abc
+def teste2 = println("abc")
+teste2 // abc
+
+// Construtores auxiliares
+class Person2(first_name: String) {
+
+  println("Outro construtor")
+
+  def this(first_name: String, last_name: String) {
+    this(first_name)
+    println("Inner constructor")
+  }
+
+  def talk() = println("Hi")
+
+}
+val bob = new Person2("Bob")
+val bobTate = new Person2("Bob", "Tate")
+
+// métodos estaticos, ele adiciona o método na classe singleton
+object Person {
+  def hi = println("Hi static")
+}
+Person.hi
+
+class Person3(val name: String) {
+  def talk(message: String) = println(name + " says " + message)
+  def id(): String = name // retorna o nome
+}
+
+class Employee(override val name: String, val number: Int) extends Person3(name) {
+  override def talk(message: String) {
+    println(name + " with number " + number + " says " + message)
+  }
+
+  override def id():String = number.toString // retorna o numero
+}
+
+val employee = new Employee("Yoda", 4)
+employee.talk("Extend or extends not. There is no try")
+
+// Traits - É um mixin de Ruby para Scala
+trait Nice {
+  def greet() = println("Howdily doodily.")
+}
+
+class Character(override val name:String) extends Person3(name) with Nice
+val flanders = new Character("Ned")
+flanders.greet // "Howdily doodily."
