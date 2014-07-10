@@ -157,3 +157,81 @@ trait Nice {
 class Character(override val name:String) extends Person3(name) with Nice
 val flanders = new Character("Ned")
 flanders.greet // "Howdily doodily."
+
+// Metodos
+def double(x:Int): Int = x * 2
+println(double(4)) // 8
+
+def doubleMultiLine(x:Int):Int = {
+  x * 2
+}
+println(double(3)) // 6
+
+List(1, 2, 3) // List[Int](1, 2, 3)
+List("a", "b", "c") // List[java.lang.String](a, b, c)
+var lst  = List("a", 2, 3) // List[Any](a, 2, 3)
+println(lst(1)) // 2
+println(lst(0)) // a
+// Nao funciona como o esperado rs
+// println(lst(-4)) // a (Sempre que o numero for negativo, retornara o primeiro numero da lista)
+
+// Sets
+val animals = Set("lions", "tigers", "bears") // "lions", "tigers", "bears"
+animals + "jacare" // "lions", "tigers", "bears", "jacare" (Para adicionar basta colocar + alguma coisa)
+animals - "lions" // "tigers", "bears", "jacare" (Para remover mesma coisa)
+
+// Para adicionar uma lista voce usa ++ e para remover --
+animals ++ Set("Cachorro", "gato") // "tigers", "bears", "jacare", "cachorro", "gato"
+animals -- Set("jacare", "tigers") // "bears", "cachorro", "gato''
+
+println(Set(1, 2, 3) == Set(3, 2, 1)) // true
+println(List(1, 2, 3) == List(3, 2, 1)) // false
+
+// Maps
+val map = Map(1 -> "um", 2 -> "dois", 3 -> "tres")
+println(map(1)) // um
+
+import scala.collection.mutable.HashMap
+val hash = new HashMap[Int, String]
+hash += 4 -> "quatro"
+hash += 5 -> "cinco"
+println(map) // Map(4 -> quatro, 8 -> oito)
+// hash += "seis" -> 6 // Da erro, o tipo nao e valido
+
+// Iterar sobre lista
+lst.foreach(obj => println(obj)) // a, 2, 3
+animals.foreach(obj => println(obj)) // lions, tigers, bears
+hash.foreach(obj => println(obj)) // (4, quatro), (5, cinco)
+hash.foreach(obj => println(obj._1 + " - " + obj._2)) // 4 - quatro, 5 - cinco
+
+// Mais métodos de collections
+println(lst.isEmpty) // false
+println(Nil.isEmpty) // true
+println(lst.length) // 3
+println(lst.size) // 3
+println(lst.head) // a
+println(lst.tail) // 2, 3  (o resto, tirando o primeiro)
+println(lst.last) // 3
+println(lst.init) // a, 2 (o resto, tirando o ultimo)
+
+println(lst.reverse) // 3, 2, a
+println(lst)
+println(lst.drop(1)) // 2, 3
+println(lst.drop(3)) // vazio (o parametro é o numero de objetos que eu vo remover da lista)
+
+val valores = List(1, 2, 5, 7, 8)
+println(valores.count(v => v % 2 == 1)) // 3 (tres numeros impares)
+println(valores.filter(v => v % 2 == 0)) // List(2, 8)
+println(valores.map(v => v % 2)) // List(1, 0, 1, 1, 0, 1)
+println(valores.forall(v => v > 0)) // true (todos sao maiores que zero)
+println(valores.forall(v => v > 2)) // false
+println(valores.exists(v => v > 0)) // true
+println(valores.exists(v => v > 4)) // true
+
+var sumlist = List("saasudhsau", "ssaehaauhaeu", "aa")
+// Começa com 0, variaval sum é sempre a mesma que vai passando elemento por elemento
+// e 'i' é o elemento
+val letters = (0 /: sumlist) {(sum, i) => sum + i.size}
+println(letters + " letras") // 24 letras
+
+sumList.foldLeft(0)((sum, value) => sum + value) // Mesma coisa 
