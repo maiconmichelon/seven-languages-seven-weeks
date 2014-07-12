@@ -233,5 +233,88 @@ var sumlist = List("saasudhsau", "ssaehaauhaeu", "aa")
 // e 'i' é o elemento
 val letters = (0 /: sumlist) {(sum, i) => sum + i.size}
 println(letters + " letras") // 24 letras
+println(sumlist.foldLeft(0)((sum, value) => sum + value.length)) // 24
 
-sumList.foldLeft(0)((sum, value) => sum + value) // Mesma coisa 
+// XML
+val movies =
+<movies>
+  <movie genero = "acao">Filme 1</movie>
+  <movie genero = "comedia">Filme 2</movie>
+</movies>
+
+println(movies.text) // Filme 1 Filme 2
+val movieNodes = movies \ "movie"
+println(movieNodes(0)) // <movie genero = "acao">Filme 1</movie>
+println(movieNodes(0) \ "@genero") // acao
+
+// Pattern Matching
+def doChore(chore: String): String = chore match {
+  case "chave1" => "key1"
+  case "chave2" => "key2"
+  case _ => "outros"
+}
+
+println(doChore("chave1")) // key1
+println(doChore("chave2")) // key2
+println(doChore("chave3")) // outros
+
+def fatorial(n: Int): Int = n match {
+  case 0 => 1
+  case x if x > 0 => { // X é o parametro (n)
+    fatorial(n - 1) * n
+  }
+}
+println(fatorial(0)) // 1
+println(fatorial(3)) // 6
+
+// Regular expression
+val reg = """^(F|f)\w*""".r // chama m'etodo r que retorna um objeto regex
+println(reg.findFirstIn("Fantastic")) // Some(Fantastic)
+println(reg.findFirstIn("not Fantastic")) // None
+
+val moviesM = <movies>
+  <movie>The Incredibles</movie>
+  <movie>WALL E</movie>
+  <short>Jack Jack Attack</short>
+  <short>Geri's Game</short>
+</movies>
+
+(moviesM \ "_").foreach { movie =>
+  movie match {
+    case <movie>{movieName}</movie> => println(movieName)
+    case <short>{shortName}</short> => println(shortName + " (short)")
+  }
+}
+
+// Concorrencia
+import scala.actors._
+import scala.actors.Actor._
+
+case object Poke
+case object Feed
+
+class Kid() extends Actor {
+  def act() {
+    loop {
+      react {
+        case Poke => {
+          println("Own...")
+          println("Quit it...")
+        }
+        case Feed => {
+          println("Gurgle...")
+          println("Burp...")
+        }
+      }
+    }
+  }
+}
+
+val bart = new Kid().start
+val lisa = new Kid().start
+println("Ready to poke and feed")
+
+bart ! Poke
+lisa ! Poke
+bart ! Feed
+lisa ! Feed
