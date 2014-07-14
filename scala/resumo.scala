@@ -314,7 +314,29 @@ val bart = new Kid().start
 val lisa = new Kid().start
 println("Ready to poke and feed")
 
-bart ! Poke
-lisa ! Poke
-bart ! Feed
-lisa ! Feed
+// bart ! Poke
+// lisa ! Poke
+// bart ! Feed
+// lisa ! Feed
+
+// Clousure
+val aoQuadrado = (x : Int) => x * x // Isto é uma clausure
+val numeros = List(1, 2, 3, 4, 5)
+println(numeros.map(aoQuadrado)) // List(2, 4, 9, 16, 25). O Map é um High-Order function, pois recebe como parametro
+// uma funcao
+
+var anyValue = 5
+val sumAnyValue = (x : Int) => x + anyValue
+println(numeros.map(sumAnyValue)) // List(6, 7, 8, 9, 10)
+anyValue = 1
+println(numeros.map(sumAnyValue)) // List(2, 3, 4, 5, 6), é Stateful, mantem um ponteiro para onde a clousure foi criada.
+
+// Currying
+// def met(x: Int)(y: Int) = x * y
+// def test(x: Int, y : (x: Int) => Int): Int = y(x)
+// println(test(2, met(3)))
+// Primeiro executa met(3), que retorna uma funcao que recebe um parametro e multiplica o parametro por 3
+// def method(x: Int) = x * 3
+// Segundo, chama o método teste passando o parametro, dentro da funcao teste ele executa o 'method' passando como
+// parametro 2.
+// O resultado é 2 * 3 , Seis.
