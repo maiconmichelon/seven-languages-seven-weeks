@@ -103,3 +103,89 @@
 (println (apply max v)) ;; 3
 (println (filter odd? v)) ;; 1 3
 (println (filter #(< % 3) v)) ;; 1 2
+
+;; Recursao
+(defn size[v]
+  (if (empty? v)
+    0
+    (inc (size (rest v)))
+  )
+)
+(println (size [1 2 3 4])) ;; 4
+
+(defn size[v]
+  (loop [l v, c 0] ;; c é um contador, v nunca irá mudar e l vai se desintegrando, (2 3 4) dpeois (2 3) deps (2)...
+    (if (empty? l) ;; se o vetor for vazio
+      c ;; retorna c que é o contador
+      (recur (rest l) (inc c)) ;; caso nao esteja vazio retorna para o LOOP, e não para a função,
+  ;; e o inc c, incremenda a variavel c, se é 3 vira 4 ...
+    )
+  )
+)
+(println (size [2 3 4])) ;; 3
+
+;; Tests
+(every? number? [1 2 3 :four]) ;; false
+(some nil? [1 2 nil]) ;; true
+(not-every? odd? [1 3 5]) ;; false
+(not-any? number? [:one :two :three]) ;; true
+
+;; Changing Sequence
+(def words ["luke", "chewbie", "han", "lando"])
+(println (filter (fn [word] (> (count word) 4)) words)) ;; ("chewbie", "lando")
+(println (map (fn [x] (* x x)) [1 2 3 4])) ;; (1 4 9 16)
+
+(def colors["red" "green" "white"])
+;; tipo um foreach
+(println (for [x colors] (str "I like " x))) ;; (I like red I like Green I like white)
+(def toys["car" "block"])
+(println (for[x colors, y toys] (str "I like " x " " y)))
+;; (I like red car I like red block I like green car I like green block I like white car I like white block)
+
+(defn menorQuatroCaracteres? [x] (< (count x) 4))
+(println (for[x colors, y toys, :when (menorQuatroCaracteres? y)] (str "I like " x " " y)))
+;; (I like red car I like green car I like white car)
+;; clause When, somente quando a varivel y tiver menos que 4 chars
+
+(println (reduce + [1 2 3 4])) ;; 10
+(println (sort [4 1 3 2])) ;; (1 2 3 4)
+
+;; com high order
+(defn abs[x] (if (< x 0) (- x) x))
+(println (sort-by abs [-1 -4 2 3])) ;; (-1 2 3 -4)
+
+;; Ranges
+(println (range 1 5)) ;; 1 2 3 4 5
+(println (range 1 5 2)) ;; 1 3 5
+(println (range 10)) ;; 0 1 2 3 4 5 6 7 8 9
+
+;; Sequencias infinitas e takes
+(println (take 3 (repeat "Use a força"))) ;; ("Use a força", "Use a força", "Use a força")
+(println (take 5 (cycle [:lather :rinse :repeat]))) ;; (:lather :rinse :repeat :lather :rinse)
+(println (take 5 (drop 2 (cycle [:lather :rinse :repeat])))) ;; (:repeat :lather :rinse :repeat :lather)
+;; acima, começando pelo terceiro, pulando os dois primeiros
+
+;; Assim tambem funciona...
+(println (->> [:lather :rinse :repeat] (cycle) (drop 2) (take 5))) ;; transforma num ciclo, pula para o terceiro
+;; elemento e começa do terceiro elemento, depois volta pro primeiro, segundo e terceiro, até passar 5 elementos.
+;; (:repeat :lather :rinse :repeat :lather)
+
+;; Colocando algo entre cada troca de posiçao
+(println (take 5 (interpose :and (cycle [:lather :rinse :repeat]))))
+;; (:lather :and :rinse :and :repeat);; a cada elemento ele coloca ' :and ' , graças ao interpose
+
+;; Posso tambem fazer um cycle sobre dois ranges, pulando de um pro outro
+(println (take 20 (interleave (cycle (range 1 3)) (cycle (range 4 6)))))
+;; (:repeat :lather :rinse :repeat :lather)
+
+;; Se eu nao coloco o take, ele continua rodando, então da pra fazer o cycle de 1 até o infinito
+;; sendo que ele funciona em lazy, não carregando tudo de uma vez.
+
+(println (take 5 (iterate inc 1))) ;; (1 2 3 4 5)
+(println (take 5 (iterate dec 0))) ;; (0 -1 -2 -3 -4)
+
+;; Fibonacci
+(defn fib-pair[[x y]] [y (+ x y)])
+(println (fib-pair [1 1])) ;; (1 2)
+(println (take 5(map first (iterate fib-pair[1, 1]))))
+;; 1 1 2 3 5
