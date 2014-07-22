@@ -133,3 +133,5 @@ lists.foldl(Adder, InitialSum, Numbers).
 Double = fun(X) -> X * 2 end.
 [Double(X) || X <- [1, 2, 3]].
 % [2, 4, 6], chame a funcao Double para cada elemento da lista
+
+end.
